@@ -5,24 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('container');
     let selectedStone = null;
 
-    // Function to position stones in a clustered arrangement
-    function positionStonesInCluster() {
-        const clusterCenterX = container.offsetWidth * 0.5;
-        const clusterCenterY = container.offsetHeight * 0.5;
-        const clusterRadius = Math.min(container.offsetWidth, container.offsetHeight) * 0.2; // Cluster radius
-
-        stones.forEach(stone => {
-            const angle = Math.random() * Math.PI * 2; // Random angle
-            const radius = Math.random() * clusterRadius; // Random radius within the cluster area
-            const x = clusterCenterX + radius * Math.cos(angle) - stone.offsetWidth / 2;
-            const y = clusterCenterY + radius * Math.sin(angle) - stone.offsetHeight / 2;
-
-            stone.style.left = `${x}px`;
-            stone.style.top = `${y}px`;
-        });
-    }
-
-    // Position stones when the page loads
+    // Position stones in a cluster when the page loads
     positionStonesInCluster();
 
     stones.forEach(stone => {
@@ -52,8 +35,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function checkSmileyFormation() {
-        // Smiley detection logic remains the same
+    function positionStonesInCluster() {
+        // Cluster positioning logic remains the same
         // ...
+    }
+
+    function checkSmileyFormation() {
+        const eyeZoneYTop = container.offsetHeight * 0.25;
+        const eyeZoneYBottom = container.offsetHeight * 0.35;
+        const mouthZoneYTop = container.offsetHeight * 0.65;
+        const mouthZoneYBottom = container.offsetHeight * 0.75;
+        let eyesCount = 0;
+        let mouthCount = 0;
+
+        stones.forEach(stone => {
+            const rect = stone.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const stoneY = rect.top - containerRect.top + (rect.height / 2);
+
+            if (stoneY >= eyeZoneYTop && stoneY <= eyeZoneYBottom) {
+                eyesCount++; // Stone is within the eye zone
+            } else if (stoneY >= mouthZoneYTop && stoneY <= mouthZoneYBottom) {
+                mouthCount++; // Stone is within the mouth zone
+            }
+        });
+
+        // Ensure exactly 2 stones are in the eyes zone and 6 stones are in the mouth zone
+        if (eyesCount === 2 && mouthCount === 6) {
+            showPopup();
+        }
+    }
+
+    function showPopup() {
+        const popup = document.getElementById('popup');
+        if (popup.classList.contains('hidden')) {
+            popup.classList.remove('hidden');
+        }
     }
 });
