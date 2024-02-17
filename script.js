@@ -27,28 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function checkSmileyFormation() {
-        const stones = document.querySelectorAll('.stone');
-        let eyeCount = 0, mouthCount = 0;
+function checkSmileyFormation() {
+    const stones = document.querySelectorAll('.stone');
+    let eyeCount = 0, mouthCount = 0;
 
-        stones.forEach(stone => {
-            const { top } = stone.getBoundingClientRect();
-            const centerY = top - container.offsetTop + stone.offsetHeight / 2;
+    stones.forEach(stone => {
+        const { top } = stone.getBoundingClientRect();
+        const centerY = top + stone.offsetHeight / 2 - container.offsetTop;
 
-            // Simplify the criteria for eyes and mouth based on vertical position
-            if (centerY < container.offsetHeight / 3) eyeCount++;
-            else if (centerY > container.offsetHeight * 2 / 3) mouthCount++;
+        if (centerY < container.offsetHeight / 3) eyeCount++; // Upper third for eyes
+        else if (centerY > container.offsetHeight * 2 / 3) mouthCount++; // Lower third for mouth
+    });
 
-            console.log(`Stone ID: ${stone.id}, centerY: ${centerY}, Eye Count: ${eyeCount}, Mouth Count: ${mouthCount}`); // Debugging
-        });
+    console.log(`Eyes: ${eyeCount}, Mouth: ${mouthCount}`); // Debugging
 
-        if (eyeCount === 2 && mouthCount === 6) {
-            showPopup();
-        } else {
-            console.log('Smiley not formed'); // Debugging
-        }
+    if (eyeCount === 2 && mouthCount === 6) {
+        showPopup();
     }
-
+}
 
     function showPopup() {
         const popup = document.getElementById('popup');
