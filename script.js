@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const stones = document.querySelectorAll('.stone');
+    const container = document.getElementById('container');
     let selectedStone = null;
 
     stones.forEach(stone => {
@@ -10,26 +11,45 @@ document.addEventListener('DOMContentLoaded', () => {
             stone.style.cursor = 'grabbing';
         });
 
-        stone.addEventListener('mouseup', () => {
-            stone.style.cursor = 'grab';
-            selectedStone = null;
-            checkSmileyFormation();
+        document.addEventListener('mousemove', (e) => {
+            if (selectedStone) {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left - selectedStone.offsetWidth / 2;
+                const y = e.clientY - rect.top - selectedStone.offsetHeight / 2;
+                selectedStone.style.left = `${x}px`;
+                selectedStone.style.top = `${y}px`;
+            }
         });
 
-        stone.addEventListener('mousemove', (e) => {
+        document.addEventListener('mouseup', () => {
             if (selectedStone) {
-                selectedStone.style.left = `${e.clientX - selectedStone.offsetWidth / 2}px`;
-                selectedStone.style.top = `${e.clientY - selectedStone.offsetHeight / 2}px`;
+                selectedStone.style.cursor = 'grab';
+                selectedStone = null;
+                checkSmileyFormation();
             }
         });
     });
 
     function checkSmileyFormation() {
-        // Placeholder for smiley face detection logic
-        // You need to define the conditions for a smiley formation based on the stones' positions
-        const isSmiley = true; // Replace this with actual logic
+        const eyeZoneY = container.offsetHeight * 0.3; // Y coordinate for eyes' zone
+        const mouthZoneY = container.offsetHeight * 0.6; // Y coordinate for mouth's zone
+        let eyesCount = 0;
+        let mouthCount = 0;
 
-        if (isSmiley) {
+        stones.forEach(stone => {
+            const rect = stone.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const stoneCenterY = rect.top + rect.height / 2 - containerRect.top;
+
+            if (stoneCenterY < eyeZoneY) {
+                eyesCount += 1; // Stone is in the eye zone
+            } else if (stoneCenterY > mouthZoneY) {
+                mouthCount += 1; // Stone is in the mouth zone
+            }
+        });
+
+        // Check if there are 2 stones in the eyes zone and 6 in the mouth zone
+        if (eyesCount === 2 && mouthCount === 6) {
             document.getElementById('popup').classList.remove('hidden');
         }
     }
