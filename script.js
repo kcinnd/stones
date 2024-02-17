@@ -8,14 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedStone = event.target;
             offsetX = event.clientX - selectedStone.getBoundingClientRect().left;
             offsetY = event.clientY - selectedStone.getBoundingClientRect().top;
-            selectedStone.style.position = 'absolute';
-            selectedStone.style.zIndex = '1000';
-            container.appendChild(selectedStone);
+            selectedStone.style.zIndex = '1000'; // Ensure the stone moves with the mouse
         }
     });
 
     document.addEventListener('mousemove', function(event) {
         if (selectedStone) {
+            // Adjust the stone's position considering the offset
             selectedStone.style.left = `${event.clientX - offsetX}px`;
             selectedStone.style.top = `${event.clientY - offsetY}px`;
         }
@@ -24,46 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mouseup', function() {
         if (selectedStone) {
             selectedStone.style.zIndex = '';
-            checkSmileyFormation();
+            checkSmileyFormation(); // Check if the stones form a smiley face
             selectedStone = null;
         }
     });
 
     function checkSmileyFormation() {
         const stones = document.querySelectorAll('.stone');
-        let eyeCandidates = [], mouthCandidates = [];
+        let eyesCount = 0, mouthCount = 0;
 
         stones.forEach(stone => {
-            const { left, top, width, height } = stone.getBoundingClientRect();
-            const centerX = left + width / 2;
-            const centerY = top + height / 2;
+            const rect = stone.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const stoneCenterY = rect.top + rect.height / 2 - containerRect.top;
 
-            // Define zones for eyes and mouth based on container dimensions
-            const eyeZone = {
-                minX: container.offsetLeft + container.offsetWidth * 0.25,
-                maxX: container.offsetLeft + container.offsetWidth * 0.75,
-                minY: container.offsetTop + container.offsetHeight * 0.2,
-                maxY: container.offsetTop + container.offsetHeight * 0.4
-            };
-            const mouthZone = {
-                minX: container.offsetLeft + container.offsetWidth * 0.25,
-                maxX: container.offsetLeft + container.offsetWidth * 0.75,
-                minY: container.offsetTop + container.offsetHeight * 0.6,
-                maxY: container.offsetTop + container.offsetHeight * 0.8
-            };
-
-            // Check if the stone's center is within the eye zone
-            if (centerX >= eyeZone.minX && centerX <= eyeZone.maxX && centerY >= eyeZone.minY && centerY <= eyeZone.maxY) {
-                eyeCandidates.push(stone);
-            }
-            // Check if the stone's center is within the mouth zone
-            else if (centerX >= mouthZone.minX && centerX <= mouthZone.maxX && centerY >= mouthZone.minY && centerY <= mouthZone.maxY) {
-                mouthCandidates.push(stone);
-            }
+            // Adjust these thresholds based on your container's size and the desired smiley layout
+            if (stoneCenterY < containerRect.height * 0.3) eyesCount++;
+            else if (stoneCenterY > containerRect.height * 0.6) mouthCount++;
         });
 
-        // Conditions for forming a smiley: 2 stones for eyes, 6 for mouth
-        if (eyeCandidates.length === 2 && mouthCandidates.length === 6) {
+        // Trigger the popup when there are 2 stones for eyes and 6 for the mouth
+        if (eyesCount === 2 && mouthCount === 6) {
             showPopup();
         }
     }
