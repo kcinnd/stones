@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedStone = target;
             offsetX = event.clientX - target.getBoundingClientRect().left;
             offsetY = event.clientY - target.getBoundingClientRect().top;
-            selectedStone.style.zIndex = '1000'; // Bring the selected stone to the front
+            selectedStone.style.zIndex = '1000';
         }
     });
 
@@ -22,53 +22,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.addEventListener('mouseup', function() {
         if (selectedStone) {
-            selectedStone.style.zIndex = ''; // Reset the z-index
-            selectedStone = null; // Release the stone
-            checkSmileyFormation(); // Check for a smiley formation after a stone is released
+            selectedStone.style.zIndex = '';
+            selectedStone = null;
+            checkSmileyFormation();
         }
     });
 
-    container.addEventListener('dragstart', (event) => event.preventDefault()); // Prevent the default drag behavior
+    container.addEventListener('dragstart', (event) => event.preventDefault());
 
-    // Function to show the popup with a detailed message and link
     function showPopup() {
         const popup = document.getElementById('popup');
         popup.innerHTML = `
             <p>Congratulations! You've made a smiley! 🎉</p>
-            <p>To continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">here</a>.</p>
+            <p>To continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">this link</a>.</p>
         `;
-        popup.classList.remove('hidden'); // Make the popup visible
+        popup.classList.remove('hidden');
+        console.log('Popup should be visible now'); // Debugging log
     }
 
-    // Function to check if the stones form a smiley face
     function checkSmileyFormation() {
         const stones = document.querySelectorAll('.stone');
-        const eyeZoneTop = container.offsetHeight * 0.1; // Define the top boundary for the eye zone
-        const eyeZoneBottom = container.offsetHeight * 0.3; // Define the bottom boundary for the eye zone
-        const mouthZoneTop = container.offsetHeight * 0.6; // Define the top boundary for the mouth zone
-        const mouthZoneBottom = container.offsetHeight * 0.9; // Define the bottom boundary for the mouth zone
-
-        let eyesCount = 0;
-        let mouthCount = 0;
+        let eyesCount = 0, mouthCount = 0;
 
         stones.forEach(stone => {
-            const stoneRect = stone.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
-            const stoneTop = stoneRect.top - containerRect.top;
+            const bounds = stone.getBoundingClientRect();
+            const posY = bounds.top - container.getBoundingClientRect().top + bounds.height / 2; // Y position of stone's center
+            const posX = bounds.left - container.getBoundingClientRect().left + bounds.width / 2; // X position of stone's center
 
-            // Count stones in the eye zone
-            if (stoneTop >= eyeZoneTop && stoneTop <= eyeZoneBottom) {
-                eyesCount++;
-            }
-            // Count stones in the mouth zone
-            if (stoneTop >= mouthZoneTop && stoneTop <= mouthZoneBottom) {
-                mouthCount++;
-            }
+            // Adjust these conditions to match your specific smiley layout
+            if (posY < container.offsetHeight * 0.3) eyesCount++; // Eye zone
+            else if (posY > container.offsetHeight * 0.6) mouthCount++; // Mouth zone
         });
 
-        // Check if the stones form a smiley face
-        if (eyesCount === 2 && mouthCount >= 4) {
-            showPopup(); // Show the popup with the message and link
-        }
+        console.log(`Eyes: ${eyesCount}, Mouth: ${mouthCount}`); // Debugging log
+
+        if (eyesCount === 2 && mouthCount >= 4) showPopup();
     }
 });
