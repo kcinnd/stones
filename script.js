@@ -6,49 +6,46 @@ document.addEventListener('DOMContentLoaded', () => {
     container.addEventListener('mousedown', function(event) {
         if (event.target.classList.contains('stone')) {
             selectedStone = event.target;
-            const rect = selectedStone.getBoundingClientRect();
-            offsetX = event.clientX - rect.left;
-            offsetY = event.clientY - rect.top;
-
-            selectedStone.style.zIndex = '1000'; // Ensure the stone is on top while moving
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp, { once: true });
+            offsetX = event.clientX - selectedStone.getBoundingClientRect().left;
+            offsetY = event.clientY - selectedStone.getBoundingClientRect().top;
+            selectedStone.style.zIndex = '1000';
         }
     });
 
-    function handleMouseMove(event) {
+    document.addEventListener('mousemove', function(event) {
         if (selectedStone) {
-            selectedStone.style.left = `${event.clientX - container.offsetLeft - offsetX}px`;
-            selectedStone.style.top = `${event.clientY - container.offsetTop - offsetY}px`;
+            selectedStone.style.left = `${event.clientX - offsetX}px`;
+            selectedStone.style.top = `${event.clientY - offsetY}px`;
         }
-    }
+    });
 
-    function handleMouseUp() {
+    document.addEventListener('mouseup', function() {
         if (selectedStone) {
-            document.removeEventListener('mousemove', handleMouseMove);
             selectedStone.style.zIndex = '';
             checkSmileyFormation();
             selectedStone = null;
         }
-    }
+    });
 
-function checkSmileyFormation() {
+    function checkSmileyFormation() {
         const stones = document.querySelectorAll('.stone');
-        const eyeCandidates = [];
-        const mouthCandidates = [];
+        let eyeCount = 0, mouthCount = 0;
 
         stones.forEach(stone => {
-            const rect = stone.getBoundingClientRect();
-            const centerY = rect.top - container.offsetTop + rect.height / 2;
+            const { top } = stone.getBoundingClientRect();
+            const centerY = top - container.offsetTop + stone.offsetHeight / 2;
 
-            // Simplified criteria: Eyes are in the top third, mouth in the bottom third
-            if (centerY < container.offsetHeight / 3) eyeCandidates.push(stone);
-            else if (centerY > container.offsetHeight * 2 / 3) mouthCandidates.push(stone);
+            // Simplify the criteria for eyes and mouth based on vertical position
+            if (centerY < container.offsetHeight / 3) eyeCount++;
+            else if (centerY > container.offsetHeight * 2 / 3) mouthCount++;
+
+            console.log(`Stone ID: ${stone.id}, centerY: ${centerY}, Eye Count: ${eyeCount}, Mouth Count: ${mouthCount}`); // Debugging
         });
 
-        // Basic smiley detection: 2 stones for eyes, 6 for the mouth
-        if (eyeCandidates.length === 2 && mouthCandidates.length === 6) {
+        if (eyeCount === 2 && mouthCount === 6) {
             showPopup();
+        } else {
+            console.log('Smiley not formed'); // Debugging
         }
     }
 
