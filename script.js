@@ -32,47 +32,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function checkSmileyFormation() {
-        const stones = document.querySelectorAll('.stone');
-        let eyes = [], mouth = [];
+   function checkSmileyFormation() {
+    const stones = document.querySelectorAll('.stone');
+    let eyes = [], mouth = [];
 
-        stones.forEach(stone => {
-            const { left, top, width, height } = stone.getBoundingClientRect();
-            const centerX = left + width / 2;
-            const centerY = top + height / 2;
-            const containerRect = container.getBoundingClientRect();
+    stones.forEach(stone => {
+        const { left, top, width, height } = stone.getBoundingClientRect();
+        const centerX = left + width / 2;
+        const centerY = top + height / 2;
+        const containerRect = container.getBoundingClientRect();
 
-            const eyeZone = {
-                minX: containerRect.left + containerRect.width * 0.25,
-                maxX: containerRect.left + containerRect.width * 0.75,
-                minY: containerRect.top + containerRect.height * 0.1,
-                maxY: containerRect.top + containerRect.height * 0.3
-            };
+        // Adjust these zones based on your container's dimensions
+        const eyeZone = {
+            minX: containerRect.left + containerRect.width * 0.3,
+            maxX: containerRect.left + containerRect.width * 0.7,
+            minY: containerRect.top + containerRect.height * 0.2,
+            maxY: containerRect.top + containerRect.height * 0.4
+        };
 
-            const mouthZone = {
-                minX: containerRect.left + containerRect.width * 0.25,
-                maxX: containerRect.left + containerRect.width * 0.75,
-                minY: containerRect.top + containerRect.height * 0.6,
-                maxY: containerRect.bottom - containerRect.height * 0.1
-            };
+        const mouthZone = {
+            minX: containerRect.left + containerRect.width * 0.2,
+            maxX: containerRect.left + containerRect.width * 0.8,
+            minY: containerRect.top + containerRect.height * 0.6,
+            maxY: containerRect.top + containerRect.height * 0.8
+        };
 
-            if (centerX >= eyeZone.minX && centerX <= eyeZone.maxX && centerY >= eyeZone.minY && centerY <= eyeZone.maxY) {
-                eyes.push(stone);
-            } else if (centerX >= mouthZone.minX && centerX <= mouthZone.maxX && centerY >= mouthZone.minY && centerY <= mouthZone.maxY) {
-                mouth.push(stone);
-            }
-        });
+        // Check for eye stones
+        if (centerX >= eyeZone.minX && centerX <= eyeZone.maxX && centerY >= eyeZone.minY && centerY <= eyeZone.maxY) {
+            eyes.push(stone);
+        }
+        // Check for mouth stones
+        else if (centerY >= mouthZone.minY && centerY <= mouthZone.maxY) {
+            mouth.push(stone);
+        }
+    });
 
-        if (eyes.length === 2 && mouth.length === 6) {
-            const mouthStonesXPositions = mouth.map(stone => stone.getBoundingClientRect().left + stone.getBoundingClientRect().width / 2);
-            const minX = Math.min(...mouthStonesXPositions);
-            const maxX = Math.max(...mouthStonesXPositions);
+    // Ensure there are exactly 2 eyes and 6 mouth stones
+    if (eyes.length === 2 && mouth.length === 6) {
+        // Additional check to ensure the mouth forms a slight curve
+        const mouthStoneXPositions = mouth.map(stone => stone.getBoundingClientRect().left + stone.getBoundingClientRect().width / 2);
+        mouthStoneXPositions.sort((a, b) => a - b); // Sort X positions to check for a curve
 
-            if (maxX - minX > containerRect.width * 0.5) { // Check for a slight curve in the mouth
-                showPopup();
+        // Check for a gradual increase then decrease to form a curve
+        let isCurved = true;
+        for (let i = 1; i < mouthStoneXPositions.length - 1; i++) {
+            if (mouthStoneXPositions[i] <= mouthStoneXPositions[i - 1] || mouthStoneXPositions[i] <= mouthStoneXPositions[i + 1]) {
+                isCurved = false;
+                break;
             }
         }
+
+        if (isCurved) {
+            showPopup();
+        }
     }
+}
 
 
     function showPopup() {
