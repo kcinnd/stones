@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedStone = null;
     let offsetX, offsetY;
 
-    // Function to handle the mousedown event
-    function handleMouseDown(event) {
+    container.addEventListener('mousedown', function(event) {
         let target = event.target;
         if (target.classList.contains('stone')) {
             selectedStone = target;
@@ -12,30 +11,34 @@ document.addEventListener('DOMContentLoaded', () => {
             offsetY = event.clientY - target.getBoundingClientRect().top;
             selectedStone.style.zIndex = '1000'; // Bring the selected stone to the front
         }
-    }
+    });
 
-    // Function to handle the mousemove event
-    function handleMouseMove(event) {
+    container.addEventListener('mousemove', function(event) {
         if (selectedStone) {
             selectedStone.style.left = `${event.clientX - container.offsetLeft - offsetX}px`;
             selectedStone.style.top = `${event.clientY - container.offsetTop - offsetY}px`;
         }
-    }
+    });
 
-    // Function to handle the mouseup event
-    function handleMouseUp() {
+    container.addEventListener('mouseup', function() {
         if (selectedStone) {
             selectedStone.style.zIndex = ''; // Reset the z-index
             selectedStone = null; // Release the stone
             checkSmileyFormation(); // Check for a smiley formation after a stone is released
         }
-    }
+    });
 
-    // Attach event listeners to the container
-    container.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
     container.addEventListener('dragstart', (event) => event.preventDefault()); // Prevent the default drag behavior
+
+    // Function to show the popup with a detailed message and link
+    function showPopup() {
+        const popup = document.getElementById('popup');
+        popup.innerHTML = `
+            <p>Congratulations! You've made a smiley! 🎉</p>
+            <p>To continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">here</a>.</p>
+        `;
+        popup.classList.remove('hidden'); // Make the popup visible
+    }
 
     // Function to check if the stones form a smiley face
     function checkSmileyFormation() {
@@ -65,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if the stones form a smiley face
         if (eyesCount === 2 && mouthCount >= 4) {
-            alert('Smiley face formed!'); // Notify the user (you can replace this with a more sophisticated action)
+            showPopup(); // Show the popup with the message and link
         }
     }
 });
