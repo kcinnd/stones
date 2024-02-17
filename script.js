@@ -33,38 +33,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 function checkSmileyFormation() {
-    const stones = document.querySelectorAll('.stone');
-    let eyes = [], mouth = [];
+        const stones = document.querySelectorAll('.stone');
+        const eyeCandidates = [];
+        const mouthCandidates = [];
 
-    stones.forEach(stone => {
-        const { top, left, width } = stone.getBoundingClientRect();
-        const centerX = left + width / 2;
-        const containerRect = container.getBoundingClientRect();
+        stones.forEach(stone => {
+            const rect = stone.getBoundingClientRect();
+            const centerY = rect.top - container.offsetTop + rect.height / 2;
 
-        // Simple criteria for eye and mouth positions
-        const isEye = top < containerRect.height * 0.4; // Eye stones are in the upper 40% of the container
-        const isMouth = top > containerRect.height * 0.6; // Mouth stones are in the lower 40% of the container
+            // Simplified criteria: Eyes are in the top third, mouth in the bottom third
+            if (centerY < container.offsetHeight / 3) eyeCandidates.push(stone);
+            else if (centerY > container.offsetHeight * 2 / 3) mouthCandidates.push(stone);
+        });
 
-        if (isEye) eyes.push(centerX); // Store centerX for sorting
-        else if (isMouth) mouth.push(stone);
-    });
-
-    // Check for 2 eyes and 6 mouth stones
-    if (eyes.length === 2 && mouth.length === 6) {
-        // Sort eyes and mouth stones by their horizontal positions
-        eyes.sort((a, b) => a - b);
-        const mouthStonesSortedByX = mouth.sort((a, b) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
-
-        // Check for basic horizontal distribution in mouth stones to suggest a curve
-        const leftMostMouthStone = mouthStonesSortedByX[0].getBoundingClientRect().left;
-        const rightMostMouthStone = mouthStonesSortedByX[mouthStonesSortedByX.length - 1].getBoundingClientRect().left;
-
-        // Ensure the mouth stones span a reasonable width and the eyes are spaced apart
-        if (rightMostMouthStone - leftMostMouthStone > containerRect.width * 0.3 && eyes[1] - eyes[0] > containerRect.width * 0.1) {
-            showPopup(); // Show the popup if a smiley face is detected
+        // Basic smiley detection: 2 stones for eyes, 6 for the mouth
+        if (eyeCandidates.length === 2 && mouthCandidates.length === 6) {
+            showPopup();
         }
     }
-}
 
 
     function showPopup() {
