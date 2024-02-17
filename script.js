@@ -1,11 +1,27 @@
-// script.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const stones = document.querySelectorAll('.stone');
     const container = document.getElementById('container');
     let selectedStone = null;
 
-    // Position stones in a cluster when the page loads
+    // Function to position stones in a clustered arrangement at the start
+    function positionStonesInCluster() {
+        const clusterCenterX = container.offsetWidth * 0.5;
+        const clusterCenterY = container.offsetHeight * 0.5;
+        const clusterRadius = Math.min(container.offsetWidth, container.offsetHeight) * 0.15; // Adjusted for tighter clustering
+
+        stones.forEach((stone, index) => {
+            const angle = Math.random() * Math.PI * 2; // Random angle for each stone
+            // Slight offset for each stone to prevent complete overlap
+            const radius = Math.random() * clusterRadius + (index * 10); 
+            const x = clusterCenterX + radius * Math.cos(angle) - stone.offsetWidth / 2;
+            const y = clusterCenterY + radius * Math.sin(angle) - stone.offsetHeight / 2;
+
+            stone.style.left = `${x}px`;
+            stone.style.top = `${y}px`;
+        });
+    }
+
+    // Initial positioning of stones in a cluster
     positionStonesInCluster();
 
     stones.forEach(stone => {
@@ -28,17 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mouseup', () => {
             if (selectedStone) {
                 selectedStone.style.cursor = 'grab';
-                selectedStone.style.zIndex = 'auto'; // Reset the z-index
+                selectedStone.style.zIndex = 'auto'; // Reset the z-index after dropping
                 selectedStone = null;
-                checkSmileyFormation();
+                checkSmileyFormation(); // Check if stones form a smiley after each drop
             }
         });
     });
-
-    function positionStonesInCluster() {
-        // Cluster positioning logic remains the same
-        // ...
-    }
 
     function checkSmileyFormation() {
         const eyeZoneYTop = container.offsetHeight * 0.25;
@@ -60,9 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Ensure exactly 2 stones are in the eyes zone and 6 stones are in the mouth zone
+        // Check for exactly 2 stones in the eyes zone and 6 stones in the mouth zone
         if (eyesCount === 2 && mouthCount === 6) {
-            showPopup();
+            showPopup(); // Show congratulations popup
         }
     }
 
