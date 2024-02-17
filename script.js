@@ -4,58 +4,70 @@ document.addEventListener('DOMContentLoaded', () => {
     let offsetX, offsetY;
 
     container.addEventListener('mousedown', function(event) {
-        let target = event.target;
-        if (target.classList.contains('stone')) {
-            selectedStone = target;
-            offsetX = event.clientX - target.getBoundingClientRect().left;
-            offsetY = event.clientY - target.getBoundingClientRect().top;
+        if (event.target.classList.contains('stone')) {
+            selectedStone = event.target;
+            offsetX = event.clientX - selectedStone.getBoundingClientRect().left;
+            offsetY = event.clientY - selectedStone.getBoundingClientRect().top;
+            selectedStone.style.position = 'absolute';
             selectedStone.style.zIndex = '1000';
+            document.body.appendChild(selectedStone);
+            moveAt(event.pageX, event.pageY);
+            document.addEventListener('mousemove', onMouseMove);
         }
     });
 
-    container.addEventListener('mousemove', function(event) {
-        if (selectedStone) {
-            selectedStone.style.left = `${event.clientX - container.offsetLeft - offsetX}px`;
-            selectedStone.style.top = `${event.clientY - container.offsetTop - offsetY}px`;
-        }
-    });
+    function moveAt(pageX, pageY) {
+        selectedStone.style.left = pageX - offsetX + 'px';
+        selectedStone.style.top = pageY - offsetY + 'px';
+    }
 
-    container.addEventListener('mouseup', function() {
+    function onMouseMove(event) {
+        moveAt(event.pageX, event.pageY);
+    }
+
+    document.addEventListener('mouseup', function() {
         if (selectedStone) {
+            document.removeEventListener('mousemove', onMouseMove);
             selectedStone.style.zIndex = '';
-            selectedStone = null;
             checkSmileyFormation();
+            selectedStone = null;
         }
     });
-
-    container.addEventListener('dragstart', (event) => event.preventDefault());
 
     function showPopup() {
         const popup = document.getElementById('popup');
+        // Set the popup content with the message and link
         popup.innerHTML = `
             <p>Congratulations! You've made a smiley! 🎉</p>
             <p>To continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">this link</a>.</p>
         `;
-        popup.classList.remove('hidden');
-        console.log('Popup should be visible now'); // Debugging log
+        popup.classList.remove('hidden'); // Show the popup
     }
 
     function checkSmileyFormation() {
         const stones = document.querySelectorAll('.stone');
-        let eyesCount = 0, mouthCount = 0;
+        let eyesCount = 0;
+        let mouthCount = 0;
 
         stones.forEach(stone => {
-            const bounds = stone.getBoundingClientRect();
-            const posY = bounds.top - container.getBoundingClientRect().top + bounds.height / 2; // Y position of stone's center
-            const posX = bounds.left - container.getBoundingClientRect().left + bounds.width / 2; // X position of stone's center
+            const rect = stone.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const stoneCenterY = rect.top + rect.height / 2 - containerRect.top;
 
-            // Adjust these conditions to match your specific smiley layout
-            if (posY < container.offsetHeight * 0.3) eyesCount++; // Eye zone
-            else if (posY > container.offsetHeight * 0.6) mouthCount++; // Mouth zone
+            if (stoneCenterY < container.offsetHeight * 0.3) {
+                eyesCount += 1; // Stone is in the eye zone
+            } else if (stoneCenterY > container.offsetHeight * 0.6) {
+                mouthCount += 1; // Stone is in the mouth zone
+            }
         });
 
-        console.log(`Eyes: ${eyesCount}, Mouth: ${mouthCount}`); // Debugging log
-
-        if (eyesCount === 2 && mouthCount >= 4) showPopup();
+        // Check for smiley formation and show popup if conditions are met
+        if (eyesCount === 2 && mouthCount >= 4) {
+            showPopup();
+        }
     }
+
+    container.addEventListener('dragstart', (event) => {
+        event.preventDefault(); // Prevent the default drag behavior
+    });
 });
