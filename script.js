@@ -38,7 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showPopup() {
         const popup = document.getElementById('popup');
-        popup.classList.remove('hidden');
+        // Set the popup content with the message and link
+        popup.innerHTML = `
+            <p>Congratulations! You've made a smiley! 🎉</p>
+            <p>Ton continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">this link</a>.</p>
+        `;
+        popup.classList.remove('hidden'); // Make sure this matches your CSS for showing the popup
     }
 
     function checkSmileyFormation() {
