@@ -9,38 +9,33 @@ body, html {
 }
 
 #container {
-    width: 60%; /* Adjust the size as needed */
-    height: 60%; /* Adjust the size as needed */
+    width: 500px; /* Fixed size for simplicity */
+    height: 500px; /* Fixed size for simplicity */
     position: relative;
-    border: 2px dashed #ccc;
+    border: 3px solid #333; /* More visible border */
+    background-color: #fff; /* White background for contrast */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #e0e0e0; /* Light grey background */
 }
 
 .stone {
-    width: 50px; /* Adjust the size as needed */
-    height: 50px; /* Adjust the size as needed */
-    background-color: #333; /* Dark grey color for stones */
+    width: 50px; /* Fixed size for visibility */
+    height: 50px; /* Fixed size for visibility */
+    background-color: #666; /* Darker color for stones */
     border-radius: 50%; /* Circular stones */
-    position: absolute; /* Allow absolute positioning within the container */
-    cursor: grab; /* Cursor indicates the stones can be grabbed */
+    position: absolute; /* Absolute positioning within the container */
 }
 
 #popup {
-    position: fixed; /* Popup is positioned relative to the viewport */
-    top: 50%; /* Centered vertically */
-    left: 50%; /* Centered horizontally */
-    transform: translate(-50%, -50%); /* Offset the transform by half the width and height of the element */
-    background-color: white;
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for a subtle depth effect */
-    z-index: 1000; /* Ensure the popup is above all other content */
-    display: none; /* Initially hidden */
-}
-
-.hidden {
-    display: none; /* Utility class to easily hide elements */
+    border: 2px solid #333;
+    z-index: 10; /* Ensure visibility over other elements */
 }
