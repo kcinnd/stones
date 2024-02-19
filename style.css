@@ -1,84 +1,22 @@
-body {
+body, html {
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     background-color: #f0f0f0;
 }
 
-.drop-area {
-    width: 300px;
-    height: 300px;
-    border: 2px dashed #333;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.face {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.eye, .mouth {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 5px;
-    position: absolute;
-    border: 1px solid #333; /* Slightly visible to guide users */
-}
-
-#left-eye {
-    left: 30%;
-}
-
-#right-eye {
-    right: 30%;
-}
-
-.mouth {
+#playArea {
     width: 60%;
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    bottom: 20%;
+    height: 60%;
+    position: relative;
 }
 
-.mouth .placeholder {
-    width: 30px; /* Smaller stones for the mouth */
-    height: 30px;
-    border-radius: 50%;
-}
-
-.stones {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.stone {
+.item {
     width: 50px;
     height: 50px;
-    background-color: #666;
     border-radius: 50%;
-    margin: 10px;
-    cursor: grab;
-}
-
-.stone:active, .dragging {
-    cursor: grabbing;
-    opacity: 0.8;
-}
-
-.placeholder.hovered {
-    border: 1px solid blue; /* Highlight placeholders when a stone is hovered over them */
+    background: url('path_to_stone_image'); /* Replace with your stone image path */
+    position: absolute;
+    cursor: move;
 }
