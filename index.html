@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smiley Face Formation</title>
+    <title>Stones</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="dropArea" class="drop-area">
-        <!-- Placeholder divs for smiley face formation -->
-        <div class="placeholder" data-position="left-eye"></div>
-        <div class="placeholder" data-position="right-eye"></div>
-        <div class="placeholder" data-position="left-mouth"></div>
-        <div class="placeholder" data-position="middle-mouth"></div>
-        <div class="placeholder" data-position="right-mouth"></div>
+        <div class="face">
+            <div id="left-eye" class="placeholder eye"></div>
+            <div id="right-eye" class="placeholder eye"></div>
+            <div class="mouth">
+                <div id="left-mouth" class="placeholder mouth"></div>
+                <div id="middle-mouth" class="placeholder mouth"></div>
+                <div id="right-mouth" class="placeholder mouth"></div>
+            </div>
+        </div>
     </div>
     <div class="stones">
         <!-- Draggable stones -->
