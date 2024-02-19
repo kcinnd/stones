@@ -8,7 +8,7 @@ body, html {
     background-color: #f0f0f0; /* Light gray background */
 }
 
-/* Styling for the play area where stones will be arranged */
+/* Styling for the play area */
 #playArea {
     width: 600px; /* Adjust based on your preference */
     height: 600px; /* Adjust based on your preference */
@@ -22,31 +22,46 @@ body, html {
 /* Styling for the smiley guide */
 #smileyGuide {
     position: absolute;
-    top: 25%; /* Positioned towards the top of the play area */
-    left: 25%; /* Positioned towards the left of the play area */
-    width: 50%; /* Takes up half of the play area's width */
-    height: 50%; /* Takes up half of the play area's height */
-    border: 2px dashed #888; /* Dashed border for a subtle guide */
-    border-radius: 50%; /* Circular shape to suggest a face outline */
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    border: 2px dashed #888; /* Dashed border for the guide */
+    border-radius: 50%; /* Circular shape */
     background-color: rgba(255, 255, 255, 0.1); /* Slightly visible background */
     z-index: 0; /* Ensures it's under the stones */
 }
 
-/* Base styling for each stone */
+/* Base styling for stones */
 .item {
-    width: 50px; /* Stone width */
-    height: 50px; /* Stone height */
-    border-radius: 50%; /* Circular stones */
-    background-color: #757575; /* Gray color for the stones */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Circular shape */
+    background-size: cover; /* Cover the entire element with the image */
     position: absolute;
-    cursor: grab; /* Cursor indicates the stones can be moved */
+    cursor: grab; /* Indicates the item can be moved */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for 3D effect */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for interaction effects */
 }
 
-/* Define starting positions for each stone */
+/* Hover effect for interaction */
+.item:hover {
+    transform: translateY(-2px); /* Slightly lift the stone */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Increase shadow to simulate elevation */
+}
+
+/* Individual stone styles with unique background images */
+#item1 { background-image: url('https://images.unsplash.com/photo-1525468568166-6f2cd17c7ec9?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+#item2 { background-image: url('https://images.unsplash.com/photo-1536566482680-fca31930a0bd?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+#item3 { background-image: url('https://plus.unsplash.com/premium_photo-1675802522583-92dffec2b6b9?q=80&w=2372&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+#item4 { background-image: url('https://images.unsplash.com/photo-1536566320732-ccc210d75500?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+#item5 { background-image: url('https://plus.unsplash.com/premium_photo-1670674117609-fb904781e516?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+#item6 { background-image: url('https://images.unsplash.com/reserve/QG8WOorFRVuY0UcwHbk7_DSC_0226.jpg?q=80&w=2376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+#item7 { background-image: url('https://images.unsplash.com/photo-1611921550716-c925882b06be?q=80&w=2535&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+
+/* Define starting positions for each stone if needed */
+/* Example:
 #item1 { top: 20px; left: 20px; }
 #item2 { top: 20px; left: 100px; }
-#item3 { top: 20px; left: 180px; }
-#item4 { top: 100px; left: 50px; }
-#item5 { top: 100px; left: 150px; }
-#item6 { top: 180px; left: 80px; }
-#item7 { top: 180px; left: 120px; }
+...
+*/
