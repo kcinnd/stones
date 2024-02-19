@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkFormation() {
         const isCorrectFormation = Array.from(placeholders).every(placeholder => placeholder.children.length > 0);
         if (isCorrectFormation) {
-            alert('Smiley face complete! 😊');
+            const message = 'To continue your adventure, click here: http://tinyurl.com/yuxss95p';
+            alert(`Smiley face complete! 😊\n\n${message}`);
         }
     }
 });
