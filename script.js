@@ -50,24 +50,20 @@ function verifyArrangement() {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        // Check if the stone's center is within the upper half of the guide for eyes
+        // Eyes candidates in the upper half
         if (centerY < guideRect.top + guideRect.height * 0.5) {
             eyesCandidates.push({ x: centerX, y: centerY });
         }
-        // Check if the stone's center is within the lower half of the guide for the smile
-        else if (centerY >= guideRect.top + guideRect.height * 0.5) {
+        // Smile candidates in the lower half
+        else {
             smileCandidates.push({ x: centerX, y: centerY });
         }
     });
 
-    // Verify that there are at least two eyes candidates in the upper half
-    const eyesVerified = eyesCandidates.length >= 2;
-
-    // Verify that there are multiple stones in the lower half to form a smile
-    const smileVerified = smileCandidates.length > 2;
-
-    // If both conditions are met, consider it a successful smiley face detection
-    if (eyesVerified && smileVerified) {
+    // There should be at least 2 eyes candidates and exactly 5 smile candidates
+    if (eyesCandidates.length >= 2 && smileCandidates.length === 5) {
+        // Further checks can be implemented here if needed (e.g., alignment, spacing)
+        
         alert('Great! Now click on the link to continue your adventure.');
         window.location.href = 'http://tinyurl.com/yuxss95p';
     }
