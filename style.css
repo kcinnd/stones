@@ -10,13 +10,14 @@ body, html {
     width: 60%;
     height: 60%;
     position: relative;
+    border: 1px solid #ccc; /* To visualize the play area */
 }
 
 .item {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: url('path_to_stone_image'); /* Replace with your stone image path */
+    background-color: gray; /* Use a solid color for testing */
     position: absolute;
     cursor: move;
 }
