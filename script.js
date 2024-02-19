@@ -1,60 +1,54 @@
+// script.js
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('container');
-    let selectedStone = null;
-    let offsetX, offsetY;
-
-    container.addEventListener('mousedown', function(event) {
-        if (event.target.classList.contains('stone')) {
-            selectedStone = event.target;
-            offsetX = event.clientX - selectedStone.getBoundingClientRect().left;
-            offsetY = event.clientY - selectedStone.getBoundingClientRect().top;
-            selectedStone.style.zIndex = '1000';
-        }
-    });
-
-    document.addEventListener('mousemove', function(event) {
-        if (selectedStone) {
-            selectedStone.style.left = `${event.clientX - offsetX}px`;
-            selectedStone.style.top = `${event.clientY - offsetY}px`;
-        }
-    });
-
-    document.addEventListener('mouseup', function() {
-        if (selectedStone) {
-            selectedStone.style.zIndex = '';
-            checkSmileyFormation();
-            selectedStone = null;
-        }
-    });
-
-function checkSmileyFormation() {
     const stones = document.querySelectorAll('.stone');
-    let eyeCount = 0, mouthCount = 0;
+    const placeholders = document.querySelectorAll('.placeholder');
 
     stones.forEach(stone => {
-        const { top } = stone.getBoundingClientRect();
-        const centerY = top + stone.offsetHeight / 2 - container.offsetTop;
-
-        if (centerY < container.offsetHeight / 3) eyeCount++; // Upper third for eyes
-        else if (centerY > container.offsetHeight * 2 / 3) mouthCount++; // Lower third for mouth
+        stone.addEventListener('dragstart', dragStart);
+        stone.addEventListener('dragend', dragEnd);
     });
 
-    console.log(`Eyes: ${eyeCount}, Mouth: ${mouthCount}`); // Debugging
+    placeholders.forEach(placeholder => {
+        placeholder.addEventListener('dragover', dragOver);
+        placeholder.addEventListener('dragenter', dragEnter);
+        placeholder.addEventListener('dragleave', dragLeave);
+        placeholder.addEventListener('drop', dragDrop);
+    });
 
-    if (eyeCount === 2 && mouthCount === 6) {
-        showPopup();
-    }
-}
-
-    function showPopup() {
-        const popup = document.getElementById('popup');
-        // Update the popup content with the specific message and link
-        popup.innerHTML = `
-            <p>Congratulations! You've made a smiley! 🎉</p>
-            <p>To continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">this link</a>.</p>
-        `;
-        popup.classList.remove('hidden');
+    function dragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.id);
+        setTimeout(() => e.target.classList.add('hide'), 0);
     }
 
-    container.addEventListener('dragstart', (event) => event.preventDefault()); // Prevent the default drag behavior
+    function dragEnd(e) {
+        e.target.classList.remove('hide');
+    }
+
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
+    function dragEnter(e) {
+        e.preventDefault();
+        e.target.classList.add('hovered');
+    }
+
+    function dragLeave(e) {
+        e.target.classList.remove('hovered');
+    }
+
+    function dragDrop(e) {
+        e.target.classList.remove('hovered');
+        const stoneId = e.dataTransfer.getData('text/plain');
+        const stone = document.getElementById(stoneId);
+        e.target.appendChild(stone);
+        checkFormation();
+    }
+
+    function checkFormation() {
+        const isCorrectFormation = Array.from(placeholders).every(placeholder => placeholder.children.length > 0);
+        if (isCorrectFormation) {
+            alert('Smiley face complete! 😊');
+        }
+    }
 });
