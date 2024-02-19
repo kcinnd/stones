@@ -50,20 +50,28 @@ function verifyArrangement() {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        // Eyes candidates in the upper half
-        if (centerY < guideRect.top + guideRect.height * 0.5) {
+        // Determine if the stone is within the eye zone
+        if (centerY < guideRect.top + guideRect.height * 0.5 && centerY > guideRect.top + guideRect.height * 0.2) {
             eyesCandidates.push({ x: centerX, y: centerY });
         }
-        // Smile candidates in the lower half
-        else {
+        // Determine if the stone is within the smile zone
+        else if (centerY >= guideRect.top + guideRect.height * 0.5) {
             smileCandidates.push({ x: centerX, y: centerY });
         }
     });
 
-    // There should be at least 2 eyes candidates and exactly 5 smile candidates
-    if (eyesCandidates.length >= 2 && smileCandidates.length === 5) {
-        // Further checks can be implemented here if needed (e.g., alignment, spacing)
-        
+    // Verify eye positions
+    const eyesAligned = eyesCandidates.length === 2 && 
+                        Math.abs(eyesCandidates[0].y - eyesCandidates[1].y) < 10; // Ensure eyes are horizontally aligned
+    
+    const guideCenterX = guideRect.left + guideRect.width / 2;
+    const eyesSymmetric = eyesCandidates.length === 2 && 
+                          Math.abs((eyesCandidates[0].x - guideCenterX) + (eyesCandidates[1].x - guideCenterX)) < 20; // Check symmetry around the center
+
+    // Verify that there are exactly 5 smile candidates
+    const smileValid = smileCandidates.length === 5;
+
+    if (eyesAligned && eyesSymmetric && smileValid) {
         alert('Great! Now click on the link to continue your adventure.');
         window.location.href = 'http://tinyurl.com/yuxss95p';
     }
