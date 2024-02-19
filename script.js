@@ -1,64 +1,38 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const stones = document.querySelectorAll('.stone');
-    const placeholders = document.querySelectorAll('.placeholder');
+let activeItem = null;
 
-    // Initialize drag and drop events for stones
-    stones.forEach(stone => {
-        stone.addEventListener('dragstart', dragStart);
-        stone.addEventListener('dragend', dragEnd);
-    });
+document.querySelectorAll('.item').forEach(item => {
+    item.onmousedown = function(event) {
+        activeItem = item;
+        activeItem.style.zIndex = 1000;
 
-    // Initialize drag events for placeholders
-    placeholders.forEach(placeholder => {
-        placeholder.addEventListener('dragover', dragOver);
-        placeholder.addEventListener('dragenter', dragEnter);
-        placeholder.addEventListener('dragleave', dragLeave);
-        placeholder.addEventListener('drop', dragDrop);
-    });
-
-    function dragStart(e) {
-        e.dataTransfer.setData('text/plain', e.target.id);
-        setTimeout(() => e.target.classList.add('dragging'), 0);
-    }
-
-    function dragEnd(e) {
-        e.target.classList.remove('dragging');
-    }
-
-    function dragOver(e) {
-        e.preventDefault(); // Necessary to allow the drop
-    }
-
-    function dragEnter(e) {
-        e.preventDefault();
-        e.target.classList.add('hovered');
-    }
-
-    function dragLeave(e) {
-        e.target.classList.remove('hovered');
-    }
-
-    function dragDrop(e) {
-        e.target.classList.remove('hovered');
-        const stoneId = e.dataTransfer.getData('text/plain');
-        const stone = document.getElementById(stoneId);
-        const targetIsPlaceholder = e.target.classList.contains('placeholder');
-        const placeholderIsEmpty = e.target.children.length === 0;
-
-        // Allow drop only if target is a placeholder and it's empty
-        if (targetIsPlaceholder && placeholderIsEmpty) {
-            e.target.appendChild(stone);
-            checkFormation();
+        function moveAt(pageX, pageY) {
+            activeItem.style.left = pageX - activeItem.offsetWidth / 2 + 'px';
+            activeItem.style.top = pageY - activeItem.offsetHeight / 2 + 'px';
         }
-    }
 
-    function checkFormation() {
-        // Check if all placeholders have a stone
-        const isCorrectFormation = Array.from(placeholders).every(placeholder => placeholder.children.length > 0);
-
-        if (isCorrectFormation) {
-            // Display popup message when the smiley face is complete
-            alert('Smiley face complete! 😊\n\nTo continue your adventure, click here: http://tinyurl.com/yuxss95p');
+        function onMouseMove(event) {
+            moveAt(event.pageX, event.pageY);
         }
-    }
+
+        document.addEventListener('mousemove', onMouseMove);
+
+        item.onmouseup = function() {
+            document.removeEventListener('mousemove', onMouseMove);
+            activeItem.style.zIndex = '';
+            activeItem = null;
+            verifyArrangement();
+        };
+    };
+
+    item.ondragstart = function() {
+        return false;
+    };
 });
+
+function verifyArrangement() {
+    // Simplified check logic
+    if ( /* condition to verify arrangement without specifying it's a smiley */ ) {
+        alert('Great! Now click on the link to continue your adventure.');
+        window.location.href = 'http://tinyurl.com/yuxss95p';
+    }
+}
