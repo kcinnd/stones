@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let activeItem = null;
-
     document.querySelectorAll('.item').forEach(item => {
-        item.onmousedown = function(event) {
-            activeItem = this;
+        item.addEventListener('mousedown', function(event) {
+            let activeItem = item;
             let shiftX = event.clientX - item.getBoundingClientRect().left;
             let shiftY = event.clientY - item.getBoundingClientRect().top;
 
+            activeItem.style.position = 'absolute';
+            activeItem.style.zIndex = 1000;
+            document.body.appendChild(activeItem);
+
             function moveAt(pageX, pageY) {
-                activeItem.style.position = 'absolute';
-                activeItem.style.zIndex = 1000;
                 activeItem.style.left = pageX - shiftX + 'px';
                 activeItem.style.top = pageY - shiftY + 'px';
             }
@@ -22,15 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.addEventListener('mousemove', onMouseMove);
 
-            item.onmouseup = function() {
+            activeItem.addEventListener('mouseup', function() {
                 document.removeEventListener('mousemove', onMouseMove);
                 activeItem.style.zIndex = '';
-                activeItem = null;
                 verifyArrangement();
-            };
+            });
+        });
 
-            item.ondragstart = () => false;
-        };
+        item.ondragstart = () => false;
     });
 });
 
