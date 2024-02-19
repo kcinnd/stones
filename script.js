@@ -74,3 +74,4 @@ function isSmile(smile) {
     // Further checks can be added here for more precise curvature detection
     return true;
 }
+
