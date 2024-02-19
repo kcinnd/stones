@@ -34,34 +34,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function verifyArrangement() {
-    const guide = document.querySelector('#smileyGuide').getBoundingClientRect();
+    const guideRect = document.querySelector('#smileyGuide').getBoundingClientRect();
     const items = document.querySelectorAll('.item');
     let eyes = [];
     let smile = [];
 
     items.forEach(item => {
-        const { top, left, bottom, right } = item.getBoundingClientRect();
+        const rect = item.getBoundingClientRect();
+        // Check if the stone's center is within the guide
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
 
-        // Check if the stone is within the smiley guide
-        if (top >= guide.top && bottom <= guide.bottom && left >= guide.left && right <= guide.right) {
-            // Classify stones as eyes if they're in the top third of the guide
-            if (top < guide.top + guide.height / 3) {
-                eyes.push({ top, left });
-            } else {
-                smile.push({ left, bottom });
+        if (centerX > guideRect.left && centerX < guideRect.right && centerY > guideRect.top && centerY < guideRect.bottom) {
+            // Determine if the stone is in the upper part (eye) or lower part (smile)
+            if (centerY < guideRect.top + guideRect.height / 3) {
+                eyes.push({ left: centerX, top: centerY });
+            } else if (centerY > guideRect.top + guideRect.height / 2) { // Lower half for smile
+                smile.push({ left: centerX, bottom: centerY });
             }
         }
     });
 
-    // Check for two eyes that are horizontally aligned
-    if (eyes.length === 2 && Math.abs(eyes[0].top - eyes[1].top) < 10) {
+    // Logic to check if eyes are aligned and smile is curved
+    if (eyes.length === 2 && Math.abs(eyes[0].top - eyes[1].top) < 10 && smile.length >= 3) {
         // Sort smile stones by their left position
         smile.sort((a, b) => a.left - b.left);
 
-        // Check for a curved smile
+        // Check if the stones form an upward curve
         let isCurved = true;
         for (let i = 1; i < smile.length - 1; i++) {
-            if (!(smile[i].bottom > smile[i - 1].bottom && smile[i].bottom > smile[i + 1].bottom)) {
+            if (!(smile[i].bottom < smile[i - 1].bottom && smile[i].bottom < smile[i + 1].bottom)) {
                 isCurved = false;
                 break;
             }
