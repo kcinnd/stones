@@ -45,33 +45,40 @@ function verifyArrangement() {
     // Sort items by their top position
     positions.sort((a, b) => a.top - b.top);
 
-    // Assuming the first two items are eyes
+    // The top two items are considered as eyes and should be horizontally aligned
     const eyes = positions.slice(0, 2);
-    // The rest are part of the smile
-    const smile = positions.slice(2);
-
-    if (areEyes(eyes) && isSmile(smile)) {
-        alert('Great! Now click on the link to continue your adventure.');
-        window.location.href = 'http://tinyurl.com/yuxss95p';
+    if (!areEyesAligned(eyes)) {
+        return; // Eyes not aligned properly, exit the function
     }
+
+    // The remaining items are considered part of the smile
+    const smile = positions.slice(2);
+    if (!isSmileCurved(smile)) {
+        return; // Smile not curved properly, exit the function
+    }
+
+    // If both eyes are aligned and the smile is curved, show the popup
+    alert('Great! Now click on the link to continue your adventure.');
+    window.location.href = 'http://tinyurl.com/yuxss95p';
 }
 
-function areEyes(eyes) {
+function areEyesAligned(eyes) {
     if (eyes.length !== 2) return false;
-    // Check if eyes are horizontally aligned with a tolerance
-    const tolerance = 10; // pixels
-    return Math.abs(eyes[0].top - eyes[1].top) < tolerance;
+    // Allow some tolerance in alignment, e.g., 10 pixels
+    const tolerance = 10;
+    return Math.abs(eyes[0].left - eyes[1].left) < tolerance;
 }
 
-function isSmile(smile) {
+function isSmileCurved(smile) {
     if (smile.length < 5) return false;
-    // Check if elements of smile are in ascending order of their left position (simple check for a curve)
-    for (let i = 0; i < smile.length - 1; i++) {
-        if (smile[i].left > smile[i + 1].left) {
-            return false;
+
+    // Check if stones are ascending then descending in their left positions
+    let peakFound = false;
+    for (let i = 1; i < smile.length - 1; i++) {
+        if (smile[i].left > smile[i - 1].left && smile[i].left > smile[i + 1].left) {
+            if (peakFound) return false; // More than one peak found
+            peakFound = true;
         }
     }
-    // Further checks can be added here for more precise curvature detection
-    return true;
+    return peakFound; // A smile should have exactly one peak (highest point)
 }
-
