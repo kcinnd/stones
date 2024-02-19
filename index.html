@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smiley Stones Game</title>
-    <link rel="stylesheet" href="style.css"> <!-- Ensure your CSS file is linked here -->
+    <title>Smiley Face Formation</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="container">
-        <div class="stone" id="stone1"></div>
-        <div class="stone" id="stone2"></div>
-        <div class="stone" id="stone3"></div>
-        <div class="stone" id="stone4"></div>
-        <div class="stone" id="stone5"></div>
-        <div class="stone" id="stone6"></div>
-        <div class="stone" id="stone7"></div>
-        <div class="stone" id="stone8"></div>
+    <div id="dropArea" class="drop-area">
+        <!-- Placeholder divs for smiley face formation -->
+        <div class="placeholder" data-position="left-eye"></div>
+        <div class="placeholder" data-position="right-eye"></div>
+        <div class="placeholder" data-position="left-mouth"></div>
+        <div class="placeholder" data-position="middle-mouth"></div>
+        <div class="placeholder" data-position="right-mouth"></div>
     </div>
-    <div id="popup" class="hidden">
-        <p>Congratulations! You've made a smiley! 🎉</p>
-        <p>To continue your adventure, click <a href="http://tinyurl.com/yuxss95p" target="_blank">here</a>.</p>
+    <div class="stones">
+        <!-- Draggable stones -->
+        <div class="stone" draggable="true" id="stone1"></div>
+        <div class="stone" draggable="true" id="stone2"></div>
+        <div class="stone" draggable="true" id="stone3"></div>
+        <div class="stone" draggable="true" id="stone4"></div>
+        <div class="stone" draggable="true" id="stone5"></div>
+        <div class="stone" draggable="true" id="stone6"></div>
+        <div class="stone" draggable="true" id="stone7"></div>
     </div>
-    <script src="script.js"></script> <!-- Ensure your JavaScript file is linked here -->
+    <script src="script.js"></script>
 </body>
 </html>
