@@ -1,29 +1,45 @@
-/* General body styling to center the play area */
+/* General body and html styling */
 body, html {
     height: 100%;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: #f0f0f0; /* Light gray background */
 }
 
-/* Styling for the play area */
+/* Styling for the play area where stones will be arranged */
 #playArea {
-    width: 500px; /* Adjust based on your preference */
-    height: 500px; /* Adjust based on your preference */
+    width: 600px; /* Adjust based on your preference */
+    height: 600px; /* Adjust based on your preference */
     position: relative;
-    border: 2px dashed #333; /* Makes the play area visible */
+    border: 3px solid #333; /* Solid border for visibility */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for the smiley guide */
+#smileyGuide {
+    position: absolute;
+    top: 25%; /* Positioned towards the top of the play area */
+    left: 25%; /* Positioned towards the left of the play area */
+    width: 50%; /* Takes up half of the play area's width */
+    height: 50%; /* Takes up half of the play area's height */
+    border: 2px dashed #888; /* Dashed border for a subtle guide */
+    border-radius: 50%; /* Circular shape to suggest a face outline */
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly visible background */
+    z-index: 0; /* Ensures it's under the stones */
 }
 
 /* Base styling for each stone */
 .item {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%; /* Makes the stones circular */
-    background-color: #757575; /* A visible color for testing */
+    width: 50px; /* Stone width */
+    height: 50px; /* Stone height */
+    border-radius: 50%; /* Circular stones */
+    background-color: #757575; /* Gray color for the stones */
     position: absolute;
-    cursor: grab; /* Indicates that the items can be moved */
+    cursor: grab; /* Cursor indicates the stones can be moved */
 }
 
 /* Define starting positions for each stone */
