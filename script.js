@@ -7,16 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let shiftX = event.clientX - item.getBoundingClientRect().left;
             let shiftY = event.clientY - item.getBoundingClientRect().top;
 
-            activeItem.style.position = 'absolute';
-            activeItem.style.zIndex = 1000;
-            document.body.append(activeItem);
-
-            moveAt(event.pageX, event.pageY);
-
             function moveAt(pageX, pageY) {
+                activeItem.style.position = 'absolute';
+                activeItem.style.zIndex = 1000;
                 activeItem.style.left = pageX - shiftX + 'px';
                 activeItem.style.top = pageY - shiftY + 'px';
             }
+
+            moveAt(event.pageX, event.pageY);
 
             function onMouseMove(event) {
                 moveAt(event.pageX, event.pageY);
@@ -26,59 +24,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
             item.onmouseup = function() {
                 document.removeEventListener('mousemove', onMouseMove);
-                item.onmouseup = null;
+                activeItem.style.zIndex = '';
+                activeItem = null;
                 verifyArrangement();
             };
-        };
 
-        item.ondragstart = () => false;
+            item.ondragstart = () => false;
+        };
     });
 });
 
 function verifyArrangement() {
+    const guide = document.querySelector('#smileyGuide').getBoundingClientRect();
     const items = document.querySelectorAll('.item');
-    const positions = Array.from(items).map(item => {
-        const rect = item.getBoundingClientRect();
-        return { top: rect.top, left: rect.left, item };
+    let eyes = [];
+    let smile = [];
+
+    items.forEach(item => {
+        const { top, left, bottom, right } = item.getBoundingClientRect();
+
+        // Check if the stone is within the smiley guide
+        if (top >= guide.top && bottom <= guide.bottom && left >= guide.left && right <= guide.right) {
+            // Classify stones as eyes if they're in the top third of the guide
+            if (top < guide.top + guide.height / 3) {
+                eyes.push({ top, left });
+            } else {
+                smile.push({ left, bottom });
+            }
+        }
     });
 
-    // Sort items by their top position
-    positions.sort((a, b) => a.top - b.top);
+    // Check for two eyes that are horizontally aligned
+    if (eyes.length === 2 && Math.abs(eyes[0].top - eyes[1].top) < 10) {
+        // Sort smile stones by their left position
+        smile.sort((a, b) => a.left - b.left);
 
-    // The top two items are considered as eyes and should be horizontally aligned
-    const eyes = positions.slice(0, 2);
-    if (!areEyesAligned(eyes)) {
-        return; // Eyes not aligned properly, exit the function
-    }
+        // Check for a curved smile
+        let isCurved = true;
+        for (let i = 1; i < smile.length - 1; i++) {
+            if (!(smile[i].bottom > smile[i - 1].bottom && smile[i].bottom > smile[i + 1].bottom)) {
+                isCurved = false;
+                break;
+            }
+        }
 
-    // The remaining items are considered part of the smile
-    const smile = positions.slice(2);
-    if (!isSmileCurved(smile)) {
-        return; // Smile not curved properly, exit the function
-    }
-
-    // If both eyes are aligned and the smile is curved, show the popup
-    alert('Great! Now click on the link to continue your adventure.');
-    window.location.href = 'http://tinyurl.com/yuxss95p';
-}
-
-function areEyesAligned(eyes) {
-    if (eyes.length !== 2) return false;
-    // Allow some tolerance in alignment, e.g., 10 pixels
-    const tolerance = 10;
-    return Math.abs(eyes[0].left - eyes[1].left) < tolerance;
-}
-
-function isSmileCurved(smile) {
-    if (smile.length < 5) return false;
-
-    // Check if stones are ascending then descending in their left positions
-    let peakFound = false;
-    for (let i = 1; i < smile.length - 1; i++) {
-        if (smile[i].left > smile[i - 1].left && smile[i].left > smile[i + 1].left) {
-            if (peakFound) return false; // More than one peak found
-            peakFound = true;
+        if (isCurved) {
+            alert('Great! Now click on the link to continue your adventure.');
+            window.location.href = 'http://tinyurl.com/yuxss95p';
         }
     }
-    return peakFound; // A smile should have exactly one peak (highest point)
 }
