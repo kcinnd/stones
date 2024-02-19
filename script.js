@@ -1,33 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stones</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="dropArea" class="drop-area">
-        <div class="face">
-            <div id="left-eye" class="placeholder eye"></div>
-            <div id="right-eye" class="placeholder eye"></div>
-            <div class="mouth">
-                <div id="left-mouth" class="placeholder mouth"></div>
-                <div id="middle-mouth" class="placeholder mouth"></div>
-                <div id="right-mouth" class="placeholder mouth"></div>
-            </div>
-        </div>
-    </div>
-    <div class="stones">
-        <!-- Draggable stones -->
-        <div class="stone" draggable="true" id="stone1"></div>
-        <div class="stone" draggable="true" id="stone2"></div>
-        <div class="stone" draggable="true" id="stone3"></div>
-        <div class="stone" draggable="true" id="stone4"></div>
-        <div class="stone" draggable="true" id="stone5"></div>
-        <div class="stone" draggable="true" id="stone6"></div>
-        <div class="stone" draggable="true" id="stone7"></div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', () => {
+    const stones = document.querySelectorAll('.stone');
+    const placeholders = document.querySelectorAll('.placeholder');
+
+    // Initialize drag and drop events for stones
+    stones.forEach(stone => {
+        stone.addEventListener('dragstart', dragStart);
+        stone.addEventListener('dragend', dragEnd);
+    });
+
+    // Initialize drag events for placeholders
+    placeholders.forEach(placeholder => {
+        placeholder.addEventListener('dragover', dragOver);
+        placeholder.addEventListener('dragenter', dragEnter);
+        placeholder.addEventListener('dragleave', dragLeave);
+        placeholder.addEventListener('drop', dragDrop);
+    });
+
+    function dragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.id);
+        setTimeout(() => e.target.classList.add('dragging'), 0);
+    }
+
+    function dragEnd(e) {
+        e.target.classList.remove('dragging');
+    }
+
+    function dragOver(e) {
+        e.preventDefault(); // Necessary to allow the drop
+    }
+
+    function dragEnter(e) {
+        e.preventDefault();
+        e.target.classList.add('hovered');
+    }
+
+    function dragLeave(e) {
+        e.target.classList.remove('hovered');
+    }
+
+    function dragDrop(e) {
+        e.target.classList.remove('hovered');
+        const stoneId = e.dataTransfer.getData('text/plain');
+        const stone = document.getElementById(stoneId);
+        const targetIsPlaceholder = e.target.classList.contains('placeholder');
+        const placeholderIsEmpty = e.target.children.length === 0;
+
+        // Allow drop only if target is a placeholder and it's empty
+        if (targetIsPlaceholder && placeholderIsEmpty) {
+            e.target.appendChild(stone);
+            checkFormation();
+        }
+    }
+
+    function checkFormation() {
+        // Check if all placeholders have a stone
+        const isCorrectFormation = Array.from(placeholders).every(placeholder => placeholder.children.length > 0);
+
+        if (isCorrectFormation) {
+            // Display popup message when the smiley face is complete
+            alert('Smiley face complete! 😊\n\nTo continue your adventure, click here: http://tinyurl.com/yuxss95p');
+        }
+    }
+});
